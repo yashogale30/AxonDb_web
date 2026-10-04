@@ -3,8 +3,27 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AxonDb : Local graph memory for AI agents</title>
-<meta name="description" content="Local graph memory for AI agents. Every answer comes with the path it followed.">
+<title>AxonDb : Local Graph Memory for AI Agents</title>
+<link rel="icon" type="image/jpeg" href="img.jpeg">
+<meta name="description" content="AxonDb is local graph memory and persistent memory for AI agents. Connect people, projects, and tools, then recall answers with the path through memory.">
+<meta name="keywords" content="graph memory, AI agent memory, memory for agents, local memory, persistent memory, knowledge graph, AI memory">
+<meta property="og:type" content="website">
+<meta property="og:title" content="AxonDb — Local Graph Memory for AI Agents">
+<meta property="og:description" content="Local graph memory and persistent memory for AI agents, with transparent recall paths.">
+<meta property="og:image" content="img.jpeg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AxonDb — Local Graph Memory for AI Agents">
+<meta name="twitter:description" content="Local graph memory and persistent memory for AI agents, with transparent recall paths.">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "AxonDb",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Cross-platform",
+  "description": "Local graph memory and persistent memory for AI agents."
+}
+</script>
 <style>
 :root{--b:#38b6ff;--k:#000;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 html{scroll-behavior:smooth;scroll-padding-top:70px}
@@ -80,13 +99,8 @@ nav .w{display:flex;align-items:center;justify-content:space-between;height:60px
 .caveat{border:2px solid var(--k);border-radius:20px;padding:22px 26px;margin-top:40px;font-size:15px}
 .caveat ul{margin:8px 0 0;padding-left:20px}
 /* code */
-.code-block{position:relative;min-width:0}
 pre{margin:0;background:var(--k);color:var(--b);border-radius:18px;padding:22px;overflow-x:auto;font-size:13.5px;line-height:1.7}
 pre .c{opacity:.55}
-.copy-btn{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid rgba(56,182,255,.55);border-radius:999px;background:var(--k);color:var(--b);font:700 12px/1 inherit;cursor:pointer}
-.copy-btn:hover{background:var(--b);color:var(--k)}
-.copy-btn:focus-visible{outline:2px solid currentColor;outline-offset:2px}
-.copy-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .lim{list-style:none;padding:0;margin:40px 0 0;display:grid;gap:12px}
 .lim li{border-bottom:1px solid rgba(56,182,255,.35);padding:0 0 12px;font-size:17px}
 .lim li:before{content:"→ ";font-weight:800}
@@ -104,7 +118,7 @@ footer .w{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;ali
     </a>
     <div class="links">
       <a href="#features">Features</a><a href="#how">How it works</a><a href="#benchmark">Benchmark</a><a href="#start">Quick start</a>
-      <a class="btn" href="https://github.com/yashogale30/AxonDb" style="padding:8px 18px">GitHub ↗</a>
+      <a class="btn" href="#" style="padding:8px 18px">GitHub ↗</a>
     </div>
   </div>
 </nav>
@@ -113,9 +127,10 @@ footer .w{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;ali
   <div class="w">
     <span class="eyebrow">Open source · MIT · Runs on your machine</span>
     <h1>Memory that shows its work.</h1>
-    <p class="lead">AxonDb is local graph memory for AI agents. It links the people, projects and tools your agent hears about, and every recall returns the path it followed to find the answer.</p>
+    <p class="lead">AxonDb is local graph memory and persistent memory for AI agents. It links the people, projects and tools your agent hears about, and every recall returns the path it followed to find the answer.</p>
     <div class="cta">
       <a class="btn solid" href="#start">Get started</a>
+      <div class="cmd mono"><span>pip install .</span><button id="copy">Copy</button></div>
     </div>
     <div class="stage">
       <div class="bar mono"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="q">recall "Which project does Priya lead, and what does it use?"</span></div>
@@ -218,9 +233,8 @@ footer .w{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;ali
     <span class="eyebrow">Quick start</span>
     <h2>Running in a minute.</h2>
     <div class="two">
-<div class="code-block">
-<pre class="mono" data-copy><span class="c"># install</span>
-git clone https://github.com/yashogale30/AxonDb.git
+<pre class="mono"><span class="c"># install</span>
+git clone YOUR_REPOSITORY_URL
 cd AxonDb
 python3 -m venv .venv
 source .venv/bin/activate
@@ -230,13 +244,7 @@ pip install .
 AxonDb remember "Priya leads the Atlas project."
 AxonDb remember "Atlas uses Redis for seat locking."
 AxonDb recall "Which project does Priya lead?"</pre>
-<button class="copy-btn mono" type="button" aria-label="Copy installation instructions">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>
-  <span>Copy</span>
-</button>
-</div>
-<div class="code-block">
-<pre class="mono" data-copy><span class="c"># claude_desktop_config.json</span>
+<pre class="mono"><span class="c"># claude_desktop_config.json</span>
 {
   "mcpServers": {
     "axondb": {
@@ -247,11 +255,6 @@ AxonDb recall "Which project does Priya lead?"</pre>
   }
 }
 <span class="c"># tools: remember, recall, forget</span></pre>
-<button class="copy-btn mono" type="button" aria-label="Copy Claude Desktop configuration">
-  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>
-  <span>Copy</span>
-</button>
-</div>
     </div>
     <p style="margin-top:22px;font-size:14px">The first run downloads two small models from Hugging Face. After that everything runs locally. Write complete sentences with names, not pronouns, for the best entity linking.</p>
   </div>
@@ -263,8 +266,10 @@ AxonDb recall "Which project does Priya lead?"</pre>
     <h2>What it doesn't do yet.</h2>
     <ul class="lim">
       <li>No handling of changing facts: an old and a new fact can both be returned.</li>
-      <!-- <li>Extraction errors carry into the graph.</li> -->
+      <li>Extraction errors carry into the graph.</li>
       <li>Graph expansion can pull in unrelated memories around heavily connected entities.</li>
+      <li>Matching depends on wording: "cache" can miss a sentence that only says Redis.</li>
+      <li>Questions that refer to people by role are a weak spot.</li>
     </ul>
     <p style="margin-top:36px;max-width:620px;opacity:.85">Privacy: memories stay in a local SQLite file and AxonDb sends nothing to a hosted service. To remove everything, delete the database file.</p>
   </div>
@@ -274,7 +279,7 @@ AxonDb recall "Which project does Priya lead?"</pre>
   <div class="w">
     <a class="logo" href="#top"><svg viewBox="100 130 520 440" aria-hidden="true"><path d="M351 182 545 518H441L300 271ZM277 315 328 404 263 518H158Z"/></svg>AxonDb</a>
     <span>MIT License · Local graph memory for AI agents</span>
-    <a class="btn" href="https://github.com/yashogale30/AxonDb" style="padding:8px 18px">GitHub ↗</a>
+    <a class="btn" href="#" style="padding:8px 18px">GitHub ↗</a>
   </div>
 </footer>
 
@@ -300,57 +305,11 @@ AxonDb recall "Which project does Priya lead?"</pre>
   if("IntersectionObserver" in window){
     new IntersectionObserver(function(e,o){if(e[0].isIntersecting){go();o.disconnect()}},{threshold:.3}).observe(host);
   }else go();
-  document.querySelectorAll(".code-block").forEach(function(block){
-    var code=block.querySelector("[data-copy]");
-    var button=block.querySelector(".copy-btn");
-    var label=button.querySelector("span");
-    var resetTimer;
-    function updateLabel(text){
-      label.textContent=text;
-      clearTimeout(resetTimer);
-      resetTimer=setTimeout(function(){
-        label.textContent="Copy";
-        button.setAttribute("aria-label",button.getAttribute("data-label"));
-      },1400);
-    }
-    function copyFallback(text){
-      var area=document.createElement("textarea");
-      area.value=text;
-      area.style.position="fixed";
-      area.style.opacity="0";
-      document.body.appendChild(area);
-      area.select();
-      var copied=false;
-      try{copied=document.execCommand("copy")}finally{area.remove()}
-      return copied;
-    }
-    button.addEventListener("click",function(){
-      var text=code.textContent;
-      button.setAttribute("data-label",button.getAttribute("aria-label"));
-      if(navigator.clipboard && window.isSecureContext){
-        navigator.clipboard.writeText(text).then(function(){
-          updateLabel("Copied");
-          button.setAttribute("aria-label","Copied");
-        }).catch(function(){
-          if(copyFallback(text)){
-            updateLabel("Copied");
-            button.setAttribute("aria-label","Copied");
-          }else{
-            updateLabel("Failed");
-            button.setAttribute("aria-label","Copy failed");
-          }
-        });
-      }else{
-        if(copyFallback(text)){
-          updateLabel("Copied");
-          button.setAttribute("aria-label","Copied");
-        }else{
-          updateLabel("Failed");
-          button.setAttribute("aria-label","Copy failed");
-        }
-      }
-    });
-  });
+  var b=document.getElementById("copy");
+  b.onclick=function(){
+    try{navigator.clipboard.writeText("pip install .")}catch(e){}
+    b.textContent="Copied";setTimeout(function(){b.textContent="Copy"},1400);
+  };
 })();
 </script>
 </body>

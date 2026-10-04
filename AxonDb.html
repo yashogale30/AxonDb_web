@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AxonDb : Local graph memory for AI agents</title>
+<meta name="description" content="Local graph memory for AI agents. Every answer comes with the path it followed.">
+<style>
+:root{--b:#38b6ff;--k:#000;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--k);color:var(--b);font:16px/1.6 -apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace}
+.w{max-width:1080px;margin:0 auto;padding:0 24px}
+.on-b{background:var(--b);color:var(--k)}
+.on-k{background:var(--k);color:var(--b)}
+section{padding:96px 0}
+h1,h2,h3{line-height:1.05;letter-spacing:-.03em;margin:0}
+h1{font-size:clamp(44px,8vw,92px);font-weight:800}
+h2{font-size:clamp(32px,5vw,56px);font-weight:800;margin-bottom:20px}
+h3{font-size:20px;letter-spacing:-.01em;margin-bottom:8px}
+.eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;margin-bottom:18px;display:block;opacity:.75}
+p{margin:0 0 14px}
+.lead{font-size:clamp(18px,2.2vw,22px);max-width:640px;opacity:.9}
+/* nav */
+nav{position:sticky;top:0;z-index:10;background:var(--k);border-bottom:1px solid rgba(56,182,255,.3)}
+nav .w{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;text-decoration:none;letter-spacing:-.02em}
+.logo svg{width:28px;height:28px;border-radius:7px;background:var(--b)}
+.logo svg path{fill:var(--k)}
+.links{display:flex;gap:26px;align-items:center;font-size:14px;font-weight:600}
+.links a{text-decoration:none;opacity:.85}.links a:hover{opacity:1}
+.btn{display:inline-block;padding:12px 22px;border-radius:999px;font-weight:700;font-size:15px;text-decoration:none;border:2px solid currentColor;cursor:pointer;background:none;font-family:inherit;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.solid{background:var(--k);color:var(--b);border-color:var(--k)}
+.on-k .btn.solid{background:var(--b);color:var(--k);border-color:var(--b)}
+@media(max-width:720px){.links a:not(.btn){display:none}}
+/* hero */
+.hero{padding:80px 0 0}
+.hero h1{max-width:900px}
+.hero .lead{margin:28px 0 34px}
+.cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.cmd{display:inline-flex;align-items:center;gap:14px;background:var(--k);color:var(--b);padding:12px 12px 12px 20px;border-radius:999px;font-size:14px}
+.cmd button{background:var(--b);color:var(--k);border:0;border-radius:999px;padding:7px 14px;font-weight:700;cursor:pointer;font-size:12px}
+.stage{background:var(--k);color:var(--b);border-radius:28px 28px 0 0;margin-top:64px;padding:28px;position:relative}
+.stage .bar{display:flex;gap:8px;align-items:center;font-size:12px;opacity:.8;margin-bottom:12px;flex-wrap:wrap}
+.dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--b)}
+.stage .q{margin-left:auto;border:1px solid var(--b);border-radius:999px;padding:4px 12px}
+.stage svg{width:100%;height:auto;display:block}
+.edge{stroke:var(--b);stroke-width:1.5;opacity:.35}
+.path{stroke:var(--b);stroke-width:4;fill:none;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;animation:trace 5s ease-in-out infinite}
+@keyframes trace{0%{stroke-dashoffset:1}55%,90%{stroke-dashoffset:0}100%{stroke-dashoffset:1}}
+.nd{fill:var(--k);stroke:var(--b);stroke-width:2}
+.nd.hit{fill:var(--b);animation:pop 5s infinite}
+@keyframes pop{0%,15%{fill:var(--k)}60%,90%{fill:var(--b)}100%{fill:var(--k)}}
+.lbl{fill:var(--b);font:600 14px ui-monospace,Menlo,monospace}
+.lbl.s{font-size:11px;opacity:.7;font-weight:400}
+.ans{fill:var(--k);font:700 13px ui-monospace,Menlo,monospace}
+/* grids */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px;margin-top:48px}
+.card{border:2px solid currentColor;border-radius:20px;padding:26px}
+.card .n{font-size:13px;font-weight:700;margin-bottom:34px;display:block;opacity:.7}
+.card p{margin:0;opacity:.88;font-size:15px}
+/* steps */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:48px}
+@media(max-width:760px){.two{grid-template-columns:1fr}section{padding:72px 0}}
+.panel{border:2px solid var(--b);border-radius:20px;padding:30px}
+.panel ol{margin:14px 0 0;padding-left:22px}
+.panel li{margin-bottom:8px;opacity:.9}
+.tag{display:inline-block;background:var(--b);color:var(--k);font-weight:800;font-size:12px;padding:3px 12px;border-radius:999px;margin-bottom:14px;letter-spacing:.06em}
+/* bench */
+.bench{margin-top:44px;display:grid;gap:30px}
+.row h3{font-size:15px;margin-bottom:12px;letter-spacing:0}
+.bar-line{display:grid;grid-template-columns:70px 1fr 40px;gap:12px;align-items:center;margin-bottom:8px;font-size:13px;font-weight:700}
+.track{height:20px;border:2px solid var(--k);border-radius:999px;overflow:hidden}
+.fill{height:100%;background:var(--k);width:0;transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.fill.v{opacity:.5}.fill.m{opacity:.22}
+.legend{font-size:13px;margin-top:6px;opacity:.8}
+.caveat{border:2px solid var(--k);border-radius:20px;padding:22px 26px;margin-top:40px;font-size:15px}
+.caveat ul{margin:8px 0 0;padding-left:20px}
+/* code */
+.code-block{position:relative;min-width:0}
+pre{margin:0;background:var(--k);color:var(--b);border-radius:18px;padding:22px;overflow-x:auto;font-size:13.5px;line-height:1.7}
+pre .c{opacity:.55}
+.copy-btn{position:absolute;top:12px;right:12px;display:inline-flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid rgba(56,182,255,.55);border-radius:999px;background:var(--k);color:var(--b);font:700 12px/1 inherit;cursor:pointer}
+.copy-btn:hover{background:var(--b);color:var(--k)}
+.copy-btn:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.copy-btn svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.lim{list-style:none;padding:0;margin:40px 0 0;display:grid;gap:12px}
+.lim li{border-bottom:1px solid rgba(56,182,255,.35);padding:0 0 12px;font-size:17px}
+.lim li:before{content:"→ ";font-weight:800}
+footer{padding:56px 0 40px;border-top:1px solid rgba(56,182,255,.3);font-size:14px}
+footer .w{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;align-items:center}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="w">
+    <a class="logo" href="#top">
+      <svg viewBox="100 130 520 440" aria-hidden="true"><path d="M351 182 545 518H441L300 271ZM277 315 328 404 263 518H158Z"/></svg>
+      AxonDb
+    </a>
+    <div class="links">
+      <a href="#features">Features</a><a href="#how">How it works</a><a href="#benchmark">Benchmark</a><a href="#start">Quick start</a>
+      <a class="btn" href="https://github.com/yashogale30/AxonDb" style="padding:8px 18px">GitHub ↗</a>
+    </div>
+  </div>
+</nav>
+
+<header id="top" class="on-b hero">
+  <div class="w">
+    <span class="eyebrow">Open source · MIT · Runs on your machine</span>
+    <h1>Memory that shows its work.</h1>
+    <p class="lead">AxonDb is local graph memory for AI agents. It links the people, projects and tools your agent hears about, and every recall returns the path it followed to find the answer.</p>
+    <div class="cta">
+      <a class="btn solid" href="#start">Get started</a>
+    </div>
+    <div class="stage">
+      <div class="bar mono"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="q">recall "Which project does Priya lead, and what does it use?"</span></div>
+      <svg viewBox="0 0 900 300" role="img" aria-label="Recall path through the memory graph: Priya, Atlas, Redis">
+        <g class="edge">
+          <line x1="130" y1="150" x2="330" y2="80" stroke="#38b6ff"/>
+          <line x1="130" y1="150" x2="330" y2="230" stroke="#38b6ff"/>
+          <line x1="330" y1="80" x2="560" y2="150" stroke="#38b6ff"/>
+          <line x1="330" y1="230" x2="560" y2="150" stroke="#38b6ff"/>
+          <line x1="560" y1="150" x2="780" y2="80" stroke="#38b6ff"/>
+          <line x1="560" y1="150" x2="780" y2="230" stroke="#38b6ff"/>
+          <line x1="330" y1="230" x2="450" y2="280" stroke="#38b6ff"/>
+          <line x1="780" y1="230" x2="860" y2="170" stroke="#38b6ff"/>
+        </g>
+        <polyline class="path" pathLength="1" points="130,150 330,80 560,150 780,80"/>
+        <circle class="nd" cx="450" cy="280" r="9"/><circle class="nd" cx="860" cy="170" r="9"/>
+        <circle class="nd hit" cx="130" cy="150" r="22"/>
+        <circle class="nd" cx="330" cy="230" r="14"/>
+        <circle class="nd hit" cx="330" cy="80" r="16"/>
+        <circle class="nd hit" cx="560" cy="150" r="22"/>
+        <circle class="nd" cx="780" cy="230" r="14"/>
+        <circle class="nd hit" cx="780" cy="80" r="22"/>
+        <text class="lbl" x="130" y="198" text-anchor="middle">Priya</text>
+        <text class="lbl" x="560" y="198" text-anchor="middle">Atlas</text>
+        <text class="lbl" x="780" y="128" text-anchor="middle">Redis</text>
+        <text class="lbl s" x="330" y="52" text-anchor="middle">"Priya leads Atlas."</text>
+        <text class="lbl s" x="650" y="104" text-anchor="middle">"Atlas uses Redis…"</text>
+        <text class="lbl s" x="330" y="262" text-anchor="middle">unrelated memory</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<section id="features" class="on-k">
+  <div class="w">
+    <span class="eyebrow">Features</span>
+    <h2>Similarity finds what's close.<br>Graphs find what's connected.</h2>
+    <p class="lead">Vector search returns sentences that sound like your question. AxonDb also follows the links between them, so answers that span two or three facts still come back.</p>
+    <div class="grid">
+      <div class="card"><span class="n mono">01</span><h3>Fully local</h3><p>SQLite on your disk. No account, no API key, no hosted service.</p></div>
+      <div class="card"><span class="n mono">02</span><h3>Explainable recall</h3><p>The traversed path is part of every result, so you can see why a memory surfaced.</p></div>
+      <div class="card"><span class="n mono">03</span><h3>Semantic + graph</h3><p>Embedding search finds the entry points. Two-hop expansion with decaying scores finds the rest.</p></div>
+      <div class="card"><span class="n mono">04</span><h3>Forgetting never deletes</h3><p>Memories are closed with an end timestamp, so history stays intact.</p></div>
+      <div class="card"><span class="n mono">05</span><h3>CLI, MCP, viewer</h3><p>Use it from the terminal, plug it into Claude Desktop, or watch the graph in a local web viewer.</p></div>
+      <div class="card"><span class="n mono">06</span><h3>Swappable storage</h3><p>All database access goes through one interface, so SQLite can be replaced later.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="on-b">
+  <div class="w">
+    <span class="eyebrow">How it works</span>
+    <h2>Two verbs. One graph.</h2>
+    <div class="two">
+      <div class="panel" style="border-color:var(--k)">
+        <span class="tag" style="background:var(--k);color:var(--b)">REMEMBER</span>
+        <h3>Write a sentence, grow the graph.</h3>
+        <ol>
+          <li>The sentence is embedded.</li>
+          <li>A local model extracts entities and relations.</li>
+          <li>Matching entities merge with existing ones.</li>
+          <li>Memories link through shared entities and similarity.</li>
+        </ol>
+      </div>
+      <div class="panel" style="border-color:var(--k)">
+        <span class="tag" style="background:var(--k);color:var(--b)">RECALL</span>
+        <h3>Ask a question, get the trail.</h3>
+        <ol>
+          <li>The question is matched against memories and named entities.</li>
+          <li>The search spreads two hops along edges, with scores decaying each step.</li>
+          <li>You get the memories and the path used to reach them.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="benchmark" class="on-k">
+  <div class="w">
+    <span class="eyebrow">Benchmark</span>
+    <h2>Biggest gains where facts must connect.</h2>
+    <p class="lead">100 generated memories, 100 questions, one answer each. A hit means the right sentence is in the top 5. Same questions and same embedding model for every method.</p>
+    <div class="bench" id="bench" style="--k:#38b6ff;--b:#000">
+      <!-- inverted tokens so bars read blue-on-black below -->
+    </div>
+    <div class="caveat" style="border-color:var(--b)">
+      <strong>Read this before quoting the numbers.</strong>
+      <ul>
+        <li>The data is templated and clean. Expect smaller gaps on real conversations.</li>
+        <li>100 questions is a modest sample, and the data and the system share one author.</li>
+        <li>A hybrid vector + keyword baseline was not tested.</li>
+        <li>One-hop questions are a tie.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section id="start" class="on-b">
+  <div class="w">
+    <span class="eyebrow">Quick start</span>
+    <h2>Running in a minute.</h2>
+    <div class="two">
+<div class="code-block">
+<pre class="mono" data-copy><span class="c"># install</span>
+git clone https://github.com/yashogale30/AxonDb.git
+cd AxonDb
+python3 -m venv .venv
+source .venv/bin/activate
+pip install .
+
+<span class="c"># remember and recall</span>
+AxonDb remember "Priya leads the Atlas project."
+AxonDb remember "Atlas uses Redis for seat locking."
+AxonDb recall "Which project does Priya lead?"</pre>
+<button class="copy-btn mono" type="button" aria-label="Copy installation instructions">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>
+  <span>Copy</span>
+</button>
+</div>
+<div class="code-block">
+<pre class="mono" data-copy><span class="c"># claude_desktop_config.json</span>
+{
+  "mcpServers": {
+    "axondb": {
+      "command": "/PATH/TO/.venv/bin/python",
+      "args": ["-m", "AxonDb.mcp_server"],
+      "env": { "AXONDB_PATH": "/PATH/TO/memory.db" }
+    }
+  }
+}
+<span class="c"># tools: remember, recall, forget</span></pre>
+<button class="copy-btn mono" type="button" aria-label="Copy Claude Desktop configuration">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h3"/></svg>
+  <span>Copy</span>
+</button>
+</div>
+    </div>
+    <p style="margin-top:22px;font-size:14px">The first run downloads two small models from Hugging Face. After that everything runs locally. Write complete sentences with names, not pronouns, for the best entity linking.</p>
+  </div>
+</section>
+
+<section class="on-k">
+  <div class="w">
+    <span class="eyebrow">Honest limits</span>
+    <h2>What it doesn't do yet.</h2>
+    <ul class="lim">
+      <li>No handling of changing facts: an old and a new fact can both be returned.</li>
+      <!-- <li>Extraction errors carry into the graph.</li> -->
+      <li>Graph expansion can pull in unrelated memories around heavily connected entities.</li>
+    </ul>
+    <p style="margin-top:36px;max-width:620px;opacity:.85">Privacy: memories stay in a local SQLite file and AxonDb sends nothing to a hosted service. To remove everything, delete the database file.</p>
+  </div>
+</section>
+
+<footer class="on-k">
+  <div class="w">
+    <a class="logo" href="#top"><svg viewBox="100 130 520 440" aria-hidden="true"><path d="M351 182 545 518H441L300 271ZM277 315 328 404 263 518H158Z"/></svg>AxonDb</a>
+    <span>MIT License · Local graph memory for AI agents</span>
+    <a class="btn" href="https://github.com/yashogale30/AxonDb" style="padding:8px 18px">GitHub ↗</a>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var data=[
+    ["All 100 questions",[41,29,63]],
+    ["2-hop questions (45)",[8,2,18],45],
+    ["3-hop questions (30)",[8,2,20],30]
+  ];
+  var names=["Vector","BM25","AxonDb"],cls=["v","m",""];
+  var host=document.getElementById("bench"),h="";
+  data.forEach(function(r){
+    var max=r[2]||100;
+    h+='<div class="row"><h3>'+r[0]+' · top 5</h3>';
+    r[1].forEach(function(v,i){
+      h+='<div class="bar-line"><span>'+names[i]+'</span><div class="track"><div class="fill '+cls[i]+'" data-w="'+(v/max*100)+'"></div></div><span>'+v+'</span></div>';
+    });
+    h+='</div>';
+  });
+  host.innerHTML=h;
+  function go(){host.querySelectorAll(".fill").forEach(function(f){f.style.width=f.getAttribute("data-w")+"%"})}
+  if("IntersectionObserver" in window){
+    new IntersectionObserver(function(e,o){if(e[0].isIntersecting){go();o.disconnect()}},{threshold:.3}).observe(host);
+  }else go();
+  document.querySelectorAll(".code-block").forEach(function(block){
+    var code=block.querySelector("[data-copy]");
+    var button=block.querySelector(".copy-btn");
+    var label=button.querySelector("span");
+    var resetTimer;
+    function updateLabel(text){
+      label.textContent=text;
+      clearTimeout(resetTimer);
+      resetTimer=setTimeout(function(){
+        label.textContent="Copy";
+        button.setAttribute("aria-label",button.getAttribute("data-label"));
+      },1400);
+    }
+    function copyFallback(text){
+      var area=document.createElement("textarea");
+      area.value=text;
+      area.style.position="fixed";
+      area.style.opacity="0";
+      document.body.appendChild(area);
+      area.select();
+      var copied=false;
+      try{copied=document.execCommand("copy")}finally{area.remove()}
+      return copied;
+    }
+    button.addEventListener("click",function(){
+      var text=code.textContent;
+      button.setAttribute("data-label",button.getAttribute("aria-label"));
+      if(navigator.clipboard && window.isSecureContext){
+        navigator.clipboard.writeText(text).then(function(){
+          updateLabel("Copied");
+          button.setAttribute("aria-label","Copied");
+        }).catch(function(){
+          if(copyFallback(text)){
+            updateLabel("Copied");
+            button.setAttribute("aria-label","Copied");
+          }else{
+            updateLabel("Failed");
+            button.setAttribute("aria-label","Copy failed");
+          }
+        });
+      }else{
+        if(copyFallback(text)){
+          updateLabel("Copied");
+          button.setAttribute("aria-label","Copied");
+        }else{
+          updateLabel("Failed");
+          button.setAttribute("aria-label","Copy failed");
+        }
+      }
+    });
+  });
+})();
+</script>
+</body>
+</html>

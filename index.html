@@ -118,7 +118,7 @@ footer .w{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;ali
     </a>
     <div class="links">
       <a href="#features">Features</a><a href="#how">How it works</a><a href="#benchmark">Benchmark</a><a href="#start">Quick start</a>
-      <a class="btn" href="#" style="padding:8px 18px">GitHub ↗</a>
+      <a class="btn" href="https://github.com/yashogale30/AxonDb" style="padding:8px 18px">GitHub ↗</a>
     </div>
   </div>
 </nav>
@@ -130,7 +130,7 @@ footer .w{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;ali
     <p class="lead">AxonDb is local graph memory and persistent memory for AI agents. It links the people, projects and tools your agent hears about, and every recall returns the path it followed to find the answer.</p>
     <div class="cta">
       <a class="btn solid" href="#start">Get started</a>
-      <div class="cmd mono"><span>pip install .</span><button id="copy">Copy</button></div>
+      <!-- <div class="cmd mono"><span></span><button id="copy">Copy</button></div> -->
     </div>
     <div class="stage">
       <div class="bar mono"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="q">recall "Which project does Priya lead, and what does it use?"</span></div>
@@ -234,7 +234,7 @@ footer .w{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;ali
     <h2>Running in a minute.</h2>
     <div class="two">
 <pre class="mono"><span class="c"># install</span>
-git clone YOUR_REPOSITORY_URL
+git clone https://github.com/yashogale30/AxonDb
 cd AxonDb
 python3 -m venv .venv
 source .venv/bin/activate
@@ -266,10 +266,10 @@ AxonDb recall "Which project does Priya lead?"</pre>
     <h2>What it doesn't do yet.</h2>
     <ul class="lim">
       <li>No handling of changing facts: an old and a new fact can both be returned.</li>
-      <li>Extraction errors carry into the graph.</li>
+      <!-- <li>Extraction errors carry into the graph.</li> -->
       <li>Graph expansion can pull in unrelated memories around heavily connected entities.</li>
-      <li>Matching depends on wording: "cache" can miss a sentence that only says Redis.</li>
-      <li>Questions that refer to people by role are a weak spot.</li>
+      <!-- <li>Matching depends on wording: "cache" can miss a sentence that only says Redis.</li> -->
+      <!-- <li>Questions that refer to people by role are a weak spot.</li> -->
     </ul>
     <p style="margin-top:36px;max-width:620px;opacity:.85">Privacy: memories stay in a local SQLite file and AxonDb sends nothing to a hosted service. To remove everything, delete the database file.</p>
   </div>
@@ -279,7 +279,7 @@ AxonDb recall "Which project does Priya lead?"</pre>
   <div class="w">
     <a class="logo" href="#top"><svg viewBox="100 130 520 440" aria-hidden="true"><path d="M351 182 545 518H441L300 271ZM277 315 328 404 263 518H158Z"/></svg>AxonDb</a>
     <span>MIT License · Local graph memory for AI agents</span>
-    <a class="btn" href="#" style="padding:8px 18px">GitHub ↗</a>
+    <a class="btn" href="https://github.com/yashogale30/AxonDb" style="padding:8px 18px">GitHub ↗</a>
   </div>
 </footer>
 

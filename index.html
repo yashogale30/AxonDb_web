@@ -232,21 +232,21 @@
       font-weight: 700;
       font-family: inherit;
       cursor: pointer;
-      border: 1.5px solid rgba(0,0,0,.35);
-      background: rgba(0,0,0,.18);
+      border: 1.5px solid rgba(0, 0, 0, .35);
+      background: rgba(0, 0, 0, .18);
       color: #000;
       backdrop-filter: blur(6px);
       transition: background .15s, transform .15s, border-color .15s
     }
 
     .copy-btn:hover {
-      background: rgba(0,0,0,.32);
-      border-color: rgba(0,0,0,.6);
+      background: rgba(0, 0, 0, .32);
+      border-color: rgba(0, 0, 0, .6);
       transform: translateY(-1px)
     }
 
     .copy-btn.copied {
-      background: rgba(0,0,0,.5);
+      background: rgba(0, 0, 0, .5);
       color: #000
     }
 
@@ -626,6 +626,151 @@
       flex-wrap: wrap;
       align-items: center
     }
+
+    /* ── Mobile responsiveness ── */
+    @media (max-width: 480px) {
+
+      /* Reduce section padding on small phones */
+      section {
+        padding: 56px 0
+      }
+
+      .w {
+        padding: 0 16px
+      }
+
+      /* Hero */
+      .hero {
+        padding: 48px 0 0
+      }
+
+      .hero .lead {
+        margin: 18px 0 24px
+      }
+
+      /* Hero stage: shrink padding and hide verbose label text */
+      .stage {
+        padding: 16px;
+        margin-top: 40px;
+        border-radius: 18px 18px 0 0
+      }
+
+      .stage .bar {
+        font-size: 10px;
+        gap: 5px
+      }
+
+      .stage .q {
+        display: none
+      }
+
+      /* CTA buttons stack neatly */
+      .cta {
+        flex-direction: column;
+        align-items: flex-start
+      }
+
+      .btn {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box
+      }
+
+      /* cmd pill: stack on mobile */
+      .cmd {
+        flex-direction: column;
+        align-items: flex-start;
+        border-radius: 16px;
+        padding: 14px 16px;
+        gap: 10px;
+        font-size: 13px
+      }
+
+      /* Feature cards: single column */
+      .grid {
+        grid-template-columns: 1fr
+      }
+
+      /* Benchmark bar-line: tighten columns */
+      .bar-line {
+        grid-template-columns: 56px 1fr 34px;
+        gap: 8px;
+        font-size: 12px
+      }
+
+      /* Code blocks: smaller font, allow wrapping */
+      pre {
+        font-size: 12px;
+        padding: 16px;
+        white-space: pre-wrap;
+        word-break: break-all
+      }
+
+      /* Quick start two-col → single col */
+      .two {
+        grid-template-columns: 1fr
+      }
+
+      /* Local diagram: reduce padding */
+      .locsvg {
+        padding: 12px
+      }
+
+      /* footer: centre everything */
+      footer .w {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px
+      }
+
+      footer .btn {
+        width: auto
+      }
+
+      /* h3 size bump for readability */
+      h3 {
+        font-size: 18px
+      }
+    }
+
+    @media (max-width: 640px) and (min-width: 481px) {
+      .w {
+        padding: 0 20px
+      }
+
+      .stage .q {
+        font-size: 11px;
+        max-width: 55vw;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
+      }
+
+      .grid {
+        grid-template-columns: 1fr
+      }
+
+      pre {
+        font-size: 12.5px;
+        white-space: pre-wrap;
+        word-break: break-all
+      }
+
+      .bar-line {
+        grid-template-columns: 60px 1fr 36px;
+        gap: 10px
+      }
+
+      footer .w {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 14px
+      }
+
+      footer .btn {
+        width: auto
+      }
+    }
   </style>
 </head>
 
@@ -823,7 +968,11 @@
       <div class="two">
         <div class="code-wrap">
           <button class="copy-btn" aria-label="Copy install commands">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
             Copy
           </button>
           <pre class="mono"><span class="c"># install</span>
@@ -840,7 +989,11 @@ AxonDb recall "Which project does Priya lead?"</pre>
         </div>
         <div class="code-wrap">
           <button class="copy-btn" aria-label="Copy MCP config">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
             Copy
           </button>
           <pre class="mono"><span class="c"># claude_desktop_config.json</span>
